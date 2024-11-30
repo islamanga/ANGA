@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Device Fingerprinting</title>
+    <!-- إضافة مكتبة FingerprintJS -->
+    <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
+</head>
+<body>
+    <h1>Device Fingerprinting Example</h1>
+    <p id="status">Preparing to collect data...</p>
+    <div id="output"></div>
+
+    <script>
+        // تهيئة FingerprintJS
+        const fpPromise = FingerprintJS.load();
+
+        // جمع البيانات
+        fpPromise
+            .then(fp => fp.get())
+            .then(result => {
+                const output = document.getElementById('output');
+                const deviceInfo = {
+                    visitorId: result.visitorId,
+                    components: result.components // Detailed device information
+                };
+
+                // عرض البيانات على الصفحة
+                output.innerText = JSON.stringify(deviceInfo, null, 2);
+
+                // تسجيل البيانات في وحدة التحكم (Console)
+                console.log("Device Info Collected:", deviceInfo);
+            })
+            .catch(error => {
+                const status = document.getElementById('status');
+                status.innerText = "Error collecting data. Check the console for details.";
+                console.error("Error:", error);
+            });
+
+        // تحديث الحالة
+        document.getElementById('status').innerText = "Collecting device data...";
+    </script>
+</body>
+</html>
